@@ -7,7 +7,7 @@ const WEEKS = [1, 2, 3, 4, 5, 6];
 
 export default function CohortTab() {
   const [activeWeek, setActiveWeek] = useState(1);
-  const [sortMode, setSortMode] = useState("date");
+  const [sortMode, setSortMode] = useState("newest");
   const [submissionFilter, setSubmissionFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -42,7 +42,7 @@ export default function CohortTab() {
 
   const onSelectAllSubmissions = useCallback(() => {
     setSubmissionFilter("all");
-    setSortMode("date");
+    setSortMode("newest");
   }, []);
 
   const onSelectCompetingOnly = useCallback(() => {

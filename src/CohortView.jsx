@@ -1,5 +1,13 @@
 import { useCallback, useState } from "react";
 
+/** First token and last token for “First Last …” display names. */
+function nameSortKeys(builderName) {
+  const parts = builderName.trim().split(/\s+/).filter(Boolean);
+  const first = parts[0] ?? "";
+  const last = parts.length > 1 ? parts[parts.length - 1] : "";
+  return { first, last };
+}
+
 function TrophyIcon({ flagged }) {
   return (
     <svg
@@ -44,17 +52,24 @@ export default function CohortView({ items, sortMode, onSortMode }) {
   const orderIndex = Object.fromEntries(items.map((s, i) => [s.id, i]));
 
   const sorted = [...items].sort((a, b) => {
-    if (sortMode === "date") {
+    const tieBreak = () => orderIndex[a.id] - orderIndex[b.id];
+    if (sortMode === "newest" || sortMode === "oldest") {
       const da = new Date(a.submissionDate).getTime();
       const db = new Date(b.submissionDate).getTime();
-      if (da !== db) return da - db;
-      return orderIndex[a.id] - orderIndex[b.id];
+      if (da !== db) return sortMode === "newest" ? db - da : da - db;
+      return tieBreak();
     }
-    const cmp = a.builderName.localeCompare(b.builderName, undefined, {
+    const ka = nameSortKeys(a.builderName);
+    const kb = nameSortKeys(b.builderName);
+    const keyA = sortMode === "firstName" ? ka.first : ka.last;
+    const keyB = sortMode === "firstName" ? kb.first : kb.last;
+    const cmp = keyA.localeCompare(keyB, undefined, { sensitivity: "base" });
+    if (cmp !== 0) return cmp;
+    const full = a.builderName.localeCompare(b.builderName, undefined, {
       sensitivity: "base",
     });
-    if (cmp !== 0) return cmp;
-    return orderIndex[a.id] - orderIndex[b.id];
+    if (full !== 0) return full;
+    return tieBreak();
   });
 
   const toggleAward = useCallback((id) => {
@@ -64,23 +79,21 @@ export default function CohortView({ items, sortMode, onSortMode }) {
   return (
     <div className="view">
       <div className="cohort-toolbar">
-        <span className="cohort-toolbar-label">Sort</span>
-        <div className="sort-group" role="group" aria-label="Sort submissions">
-          <button
-            type="button"
-            className={`sort-btn ${sortMode === "date" ? "sort-btn-active" : ""}`}
-            onClick={() => onSortMode("date")}
-          >
-            Submission date
-          </button>
-          <button
-            type="button"
-            className={`sort-btn ${sortMode === "name" ? "sort-btn-active" : ""}`}
-            onClick={() => onSortMode("name")}
-          >
-            Submitter name
-          </button>
-        </div>
+        <label className="cohort-toolbar-label" htmlFor="cohort-sort-select">
+          Sort
+        </label>
+        <select
+          id="cohort-sort-select"
+          className="cohort-sort-select"
+          value={sortMode}
+          onChange={(e) => onSortMode(e.target.value)}
+          aria-label="Sort submissions"
+        >
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="firstName">First name A-Z</option>
+          <option value="lastName">Last name A-Z</option>
+        </select>
       </div>
 
       <div className="card-grid">
