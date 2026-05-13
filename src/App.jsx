@@ -1,56 +1,10 @@
-import { useCallback, useMemo, useState } from "react";
-import CohortView from "./CohortView.jsx";
-import { submissions } from "./data.js";
+import { useState } from "react";
+import CohortTab from "./CohortTab.jsx";
+import MyStuff from "./MyStuff.jsx";
 import "./App.css";
 
-const WEEKS = [1, 2, 3, 4, 5, 6];
-
 export default function App() {
-  const [activeWeek, setActiveWeek] = useState(1);
-  const [sortMode, setSortMode] = useState("date");
-  const [submissionFilter, setSubmissionFilter] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const weekItems = useMemo(
-    () => submissions.filter((s) => s.week === activeWeek),
-    [activeWeek]
-  );
-
-  const competingCount = useMemo(
-    () => weekItems.filter((s) => s.competeForWin).length,
-    [weekItems]
-  );
-
-  const displayItems = useMemo(() => {
-    if (submissionFilter === "competing") {
-      return weekItems.filter((s) => s.competeForWin);
-    }
-    return weekItems;
-  }, [weekItems, submissionFilter]);
-
-  const searchFilteredItems = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
-    if (!q) return displayItems;
-    return displayItems.filter(
-      (s) =>
-        s.builderName.toLowerCase().includes(q) ||
-        s.projectName.toLowerCase().includes(q)
-    );
-  }, [displayItems, searchQuery]);
-
-  const onSelectAllSubmissions = useCallback(() => {
-    setSubmissionFilter("all");
-    setSortMode("date");
-  }, []);
-
-  const onSelectCompetingOnly = useCallback(() => {
-    setSubmissionFilter("competing");
-  }, []);
-
-  const onWeekChange = useCallback((w) => {
-    setActiveWeek(w);
-    setSearchQuery("");
-  }, []);
+  const [topTab, setTopTab] = useState("myStuff");
 
   return (
     <div className="app">
@@ -59,73 +13,25 @@ export default function App() {
         <p className="app-subtitle">
           Cursor Boston Summer Cohort 1: Mon, May 11 – Fri, Jun 19
         </p>
-        <nav className="tabs week-tabs" aria-label="Week">
-          {WEEKS.map((w) => (
-            <button
-              key={w}
-              type="button"
-              className={`tab ${activeWeek === w ? "tab-active" : ""}`}
-              onClick={() => onWeekChange(w)}
-            >
-              Week {w}
-            </button>
-          ))}
+        <nav className="tabs app-main-tabs" aria-label="Primary">
+          <button
+            type="button"
+            className={`tab ${topTab === "myStuff" ? "tab-active" : ""}`}
+            onClick={() => setTopTab("myStuff")}
+          >
+            My Stuff
+          </button>
+          <button
+            type="button"
+            className={`tab ${topTab === "cohort" ? "tab-active" : ""}`}
+            onClick={() => setTopTab("cohort")}
+          >
+            Cohort
+          </button>
         </nav>
       </header>
 
-      {weekItems.length > 0 ? (
-        <>
-          <p className="cohort-filters" aria-label="Submission filters">
-            <button
-              type="button"
-              className={`cohort-filter-text ${
-                submissionFilter === "all"
-                  ? "cohort-filter-text-active"
-                  : "cohort-filter-text-inactive"
-              }`}
-              onClick={onSelectAllSubmissions}
-            >
-              {weekItems.length} Total Submissions
-            </button>
-            <span className="cohort-filter-sep" aria-hidden>
-              {" "}
-              ·{" "}
-            </span>
-            <button
-              type="button"
-              className={`cohort-filter-text ${
-                submissionFilter === "competing"
-                  ? "cohort-filter-text-active"
-                  : "cohort-filter-text-inactive"
-              }`}
-              onClick={onSelectCompetingOnly}
-            >
-              {competingCount} Competing for the Win
-            </button>
-          </p>
-          <label className="cohort-search-label">
-            <span className="visually-hidden">Search by name or project</span>
-            <input
-              type="search"
-              className="cohort-search-input"
-              placeholder="Search by name or project"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              autoComplete="off"
-              spellCheck={false}
-            />
-          </label>
-          <CohortView
-            items={searchFilteredItems}
-            sortMode={sortMode}
-            onSortMode={setSortMode}
-          />
-        </>
-      ) : (
-        <div className="week-empty">
-          <p>No submissions yet</p>
-        </div>
-      )}
+      {topTab === "myStuff" ? <MyStuff /> : <CohortTab />}
     </div>
   );
 }

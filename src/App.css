@@ -332,3 +332,451 @@ button.cohort-filter-text {
   color: #404040;
   opacity: 1;
 }
+
+.app-main-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0 36px;
+  margin-top: 28px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.app-main-tabs .tab {
+  margin-right: 0;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.cohort-tab {
+  margin-top: 20px;
+}
+
+.cohort-status-wrap {
+  margin-top: 24px;
+  overflow-x: auto;
+}
+
+.cohort-status-table {
+  width: 100%;
+  max-width: 920px;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.cohort-status-table th,
+.cohort-status-table td {
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e5e5;
+  vertical-align: middle;
+}
+
+.cohort-status-table th {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #a3a3a3;
+  background: #fafafa;
+}
+
+.cohort-status-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.cohort-status-namecell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cohort-status-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.cohort-status-name {
+  font-weight: 500;
+  color: #171717;
+}
+
+.cohort-status-project {
+  color: #737373;
+  font-weight: 400;
+}
+
+.cohort-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.cohort-status-not-started {
+  color: #a3a3a3;
+}
+
+.cohort-status-in-progress {
+  color: #171717;
+}
+
+.cohort-status-complete-ok {
+  color: #171717;
+}
+
+.cohort-status-complete-late {
+  color: #171717;
+}
+
+.cohort-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cohort-status-dot-amber {
+  background: #d97706;
+}
+
+.cohort-status-dot-green {
+  background: #16a34a;
+}
+
+.cohort-status-dot-red {
+  background: #b91c1c;
+  opacity: 0.75;
+}
+
+.cohort-submitted-ok {
+  color: #525252;
+}
+
+.cohort-submitted-late {
+  color: #991b1b;
+  opacity: 0.85;
+}
+
+.cohort-submitted-na {
+  color: #d4d4d4;
+}
+
+.cohort-inner-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-bottom: 1px solid #e5e5e5;
+  margin-top: 20px;
+}
+
+.cohort-inner-tab {
+  appearance: none;
+  border: none;
+  background: none;
+  padding: 10px 0 12px;
+  margin-right: 22px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #a3a3a3;
+  cursor: pointer;
+  position: relative;
+}
+
+.cohort-inner-tab:hover {
+  color: #525252;
+}
+
+.cohort-inner-tab-active {
+  color: #000;
+  font-weight: 600;
+}
+
+.cohort-inner-tab-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: #000;
+}
+
+.cohort-week-empty {
+  margin-top: 24px;
+}
+
+.my-stuff {
+  margin-top: 20px;
+}
+
+.reminders-strip {
+  background: #fafafa;
+  padding: 10px 14px;
+  margin-bottom: 28px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #737373;
+}
+
+.reminders-line {
+  margin: 0;
+}
+
+.reminders-line + .reminders-line {
+  margin-top: 4px;
+}
+
+.reminders-line-overdue {
+  color: #b91c1c;
+  font-weight: 500;
+}
+
+.progress-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.progress-track-row {
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) 1fr auto minmax(100px, 120px);
+  align-items: center;
+  gap: 16px 20px;
+}
+
+@media (max-width: 720px) {
+  .progress-track-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .manage-work-btn {
+    justify-self: start;
+  }
+}
+
+.progress-track-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #262626;
+}
+
+.progress-track-middle {
+  min-width: 0;
+}
+
+.progress-track-meta {
+  font-size: 12px;
+  color: #737373;
+  margin-bottom: 6px;
+}
+
+.progress-bar-track {
+  height: 6px;
+  background: #e5e5e5;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: #000;
+  transition: width 0.2s ease;
+}
+
+.progress-track-alarm {
+  font-size: 16px;
+  line-height: 1;
+  color: #d97706;
+  text-align: center;
+}
+
+.progress-track-alarm-spacer {
+  width: 22px;
+}
+
+.manage-work-btn {
+  justify-self: end;
+  border: 1px solid #000;
+  border-radius: 6px;
+  background: #fff;
+  color: #000;
+  padding: 6px 12px;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.manage-work-btn:hover {
+  background: #fafafa;
+}
+
+.week-task-view {
+  margin-top: 8px;
+  padding-bottom: 48px;
+}
+
+.week-task-view-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.week-task-back {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.week-task-back:hover {
+  opacity: 0.7;
+}
+
+.week-task-view-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #000;
+}
+
+.week-task-section {
+  margin-bottom: 24px;
+}
+
+.week-task-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.week-task-section-label {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #a3a3a3;
+}
+
+.week-task-checkall {
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  background: #fff;
+  padding: 6px 12px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000;
+  cursor: pointer;
+}
+
+.week-task-checkall:hover {
+  background: #fafafa;
+}
+
+.week-task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.week-task-row {
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.week-task-row-custom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.week-task-check-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  color: #262626;
+  cursor: pointer;
+}
+
+.week-task-check-label input {
+  margin-top: 3px;
+}
+
+.week-task-delete {
+  flex-shrink: 0;
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 12px;
+  color: #737373;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.week-task-delete:hover {
+  color: #000;
+}
+
+.week-task-sep {
+  border: none;
+  border-top: 1px solid #e5e5e5;
+  margin: 8px 0 24px;
+}
+
+.week-task-add-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  max-width: 480px;
+}
+
+.week-task-add-input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid #d4d4d4;
+  border-radius: 0;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.week-task-add-input:focus {
+  outline: none;
+  border-color: #737373;
+}
+
+.week-task-add-btn {
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  background: #fff;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: #000;
+  cursor: pointer;
+}
+
+.week-task-add-btn:hover {
+  background: #fafafa;
+}

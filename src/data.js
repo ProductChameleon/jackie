@@ -1,3 +1,5 @@
+import { buildWeeks234Submissions } from "./cohortWeeks234.js";
+
 /**
  * Demo cohort data — 50 Week 1 PM-tool submissions. Dates May 11–15, 2026.
  * ~15 competeForWin, remainder false.
@@ -199,7 +201,7 @@ function slugify(name) {
     .replace(/(^-|-$)/g, "");
 }
 
-function buildSubmissions() {
+function buildWeek1Submissions() {
   return PROJECT_ROWS.map(([projectName, description], i) => {
     const id = `s${i + 1}`;
     const slug = slugify(projectName);
@@ -221,4 +223,7 @@ function buildSubmissions() {
   });
 }
 
-export const submissions = buildSubmissions();
+export const submissions = [
+  ...buildWeek1Submissions(),
+  ...buildWeeks234Submissions(),
+];
