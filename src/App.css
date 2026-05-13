@@ -336,6 +336,14 @@ button.cohort-filter-text {
   opacity: 1;
 }
 
+.card-submitted {
+  margin: 10px 0 0;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: #a3a3a3;
+}
+
 .app-main-tabs {
   display: flex;
   flex-wrap: wrap;

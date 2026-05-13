@@ -1,5 +1,22 @@
 import { useCallback, useState } from "react";
 
+const submittedDateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+});
+
+/** @param {string} isoDate `YYYY-MM-DD` from cohort data */
+function formatSubmittedCaption(isoDate) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(isoDate));
+  if (!m) return `Submitted ${isoDate}`;
+  const y = Number(m[1]);
+  const mo = Number(m[2]) - 1;
+  const d = Number(m[3]);
+  const date = new Date(y, mo, d);
+  return `Submitted ${submittedDateFormatter.format(date)}`;
+}
+
 /** First token and last token for “First Last …” display names. */
 function nameSortKeys(builderName) {
   const parts = builderName.trim().split(/\s+/).filter(Boolean);
@@ -144,6 +161,7 @@ export default function CohortView({ items, sortMode, onSortMode }) {
                   Repo
                 </a>
               </div>
+              <p className="card-submitted">{formatSubmittedCaption(s.submissionDate)}</p>
             </article>
           );
         })}
