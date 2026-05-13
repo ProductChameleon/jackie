@@ -7,12 +7,10 @@ const WEEKS = [1, 2, 3, 4, 5, 6];
 
 export default function CohortTab() {
   const [activeWeek, setActiveWeek] = useState(1);
-  const [cohortSubTab, setCohortSubTab] = useState("submissions");
   const [sortMode, setSortMode] = useState("date");
   const [submissionFilter, setSubmissionFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const showVoteTab = activeWeek >= 1 && activeWeek <= 3;
   const showStatusTable = activeWeek >= 4 && activeWeek <= 6;
 
   const weekItems = useMemo(
@@ -25,17 +23,12 @@ export default function CohortTab() {
     [weekItems]
   );
 
-  const voteMode = showVoteTab && cohortSubTab === "vote";
-
   const displayItems = useMemo(() => {
-    if (voteMode) {
-      return weekItems.filter((s) => s.competeForWin);
-    }
     if (submissionFilter === "competing") {
       return weekItems.filter((s) => s.competeForWin);
     }
     return weekItems;
-  }, [weekItems, submissionFilter, voteMode]);
+  }, [weekItems, submissionFilter]);
 
   const searchFilteredItems = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -59,17 +52,7 @@ export default function CohortTab() {
   const onWeekChange = useCallback((w) => {
     setActiveWeek(w);
     setSearchQuery("");
-    setCohortSubTab("submissions");
     setSubmissionFilter("all");
-  }, []);
-
-  const onInnerTab = useCallback((tab) => {
-    setCohortSubTab(tab);
-    setSearchQuery("");
-    if (tab === "submissions") {
-      setSubmissionFilter("all");
-      setSortMode("date");
-    }
   }, []);
 
   return (
@@ -91,59 +74,34 @@ export default function CohortTab() {
         <CohortStatusTable week={activeWeek} />
       ) : (
         <>
-          {showVoteTab ? (
-            <nav className="cohort-inner-tabs" aria-label="Week view">
-              <button
-                type="button"
-                className={`cohort-inner-tab ${
-                  cohortSubTab === "submissions" ? "cohort-inner-tab-active" : ""
-                }`}
-                onClick={() => onInnerTab("submissions")}
-              >
-                Submissions
-              </button>
-              <button
-                type="button"
-                className={`cohort-inner-tab ${
-                  cohortSubTab === "vote" ? "cohort-inner-tab-active" : ""
-                }`}
-                onClick={() => onInnerTab("vote")}
-              >
-                Vote
-              </button>
-            </nav>
-          ) : null}
-
-          {!voteMode ? (
-            <p className="cohort-filters" aria-label="Submission filters">
-              <button
-                type="button"
-                className={`cohort-filter-text ${
-                  submissionFilter === "all"
-                    ? "cohort-filter-text-active"
-                    : "cohort-filter-text-inactive"
-                }`}
-                onClick={onSelectAllSubmissions}
-              >
-                {weekItems.length} Total Submissions
-              </button>
-              <span className="cohort-filter-sep" aria-hidden>
-                {" "}
-                ·{" "}
-              </span>
-              <button
-                type="button"
-                className={`cohort-filter-text ${
-                  submissionFilter === "competing"
-                    ? "cohort-filter-text-active"
-                    : "cohort-filter-text-inactive"
-                }`}
-                onClick={onSelectCompetingOnly}
-              >
-                {competingCount} Competing for the Win
-              </button>
-            </p>
-          ) : null}
+          <p className="cohort-filters" aria-label="Submission filters">
+            <button
+              type="button"
+              className={`cohort-filter-text ${
+                submissionFilter === "all"
+                  ? "cohort-filter-text-active"
+                  : "cohort-filter-text-inactive"
+              }`}
+              onClick={onSelectAllSubmissions}
+            >
+              {weekItems.length} Total Submissions
+            </button>
+            <span className="cohort-filter-sep" aria-hidden>
+              {" "}
+              ·{" "}
+            </span>
+            <button
+              type="button"
+              className={`cohort-filter-text ${
+                submissionFilter === "competing"
+                  ? "cohort-filter-text-active"
+                  : "cohort-filter-text-inactive"
+              }`}
+              onClick={onSelectCompetingOnly}
+            >
+              {competingCount} Competing for the Win
+            </button>
+          </p>
 
           <label className="cohort-search-label">
             <span className="visually-hidden">Search by name or project</span>

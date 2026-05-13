@@ -466,46 +466,6 @@ button.cohort-filter-text {
   color: #d4d4d4;
 }
 
-.cohort-inner-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0;
-  border-bottom: 1px solid #e5e5e5;
-  margin-top: 20px;
-}
-
-.cohort-inner-tab {
-  appearance: none;
-  border: none;
-  background: none;
-  padding: 10px 0 12px;
-  margin-right: 22px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #a3a3a3;
-  cursor: pointer;
-  position: relative;
-}
-
-.cohort-inner-tab:hover {
-  color: #525252;
-}
-
-.cohort-inner-tab-active {
-  color: #000;
-  font-weight: 600;
-}
-
-.cohort-inner-tab-active::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 2px;
-  background: #000;
-}
-
 .cohort-week-empty {
   margin-top: 24px;
 }
