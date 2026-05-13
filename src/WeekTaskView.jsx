@@ -35,11 +35,17 @@ export default function WeekTaskView({ week, onBack, onTasksUpdated }) {
     [week, bump]
   );
 
-  const onCheckAll = useCallback(() => {
-    setAllRequiredChecked(week, taskCount, true);
-    setRequiredDone(Array(taskCount).fill(true));
+  const allRequiredChecked =
+    taskCount > 0 &&
+    requiredDone.length === taskCount &&
+    requiredDone.every(Boolean);
+
+  const onToggleCheckAll = useCallback(() => {
+    const next = !allRequiredChecked;
+    setAllRequiredChecked(week, taskCount, next);
+    setRequiredDone(Array(taskCount).fill(next));
     bump();
-  }, [week, taskCount, bump]);
+  }, [week, taskCount, bump, allRequiredChecked]);
 
   const onToggleCustom = useCallback(
     (index) => {
@@ -93,8 +99,12 @@ export default function WeekTaskView({ week, onBack, onTasksUpdated }) {
       <section className="week-task-section">
         <div className="week-task-section-head">
           <h3 className="week-task-section-label">Required Tasks</h3>
-          <button type="button" className="week-task-checkall" onClick={onCheckAll}>
-            Check All
+          <button
+            type="button"
+            className="week-task-checkall"
+            onClick={onToggleCheckAll}
+          >
+            {allRequiredChecked ? "Uncheck All" : "Check All"}
           </button>
         </div>
         <ul className="week-task-list">
