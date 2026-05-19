@@ -45,6 +45,14 @@
   color: #737373;
   cursor: pointer;
   position: relative;
+  outline: none;
+  box-shadow: none;
+}
+
+.tab:focus,
+.tab:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 .tab:hover {
@@ -300,6 +308,13 @@ button.cohort-filter-text {
   color: #525252;
 }
 
+.card-display-name {
+  margin: 2px 0 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: #525252;
+}
+
 .card-description {
   margin: 0;
   font-size: 14px;
@@ -307,33 +322,144 @@ button.cohort-filter-text {
   line-height: 1.55;
 }
 
-.card-compete-pitch {
-  margin: 0;
-  font-size: 12px;
-  font-style: italic;
+.card-description-toggle {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 14px;
   font-weight: 400;
-  color: #525252;
-  line-height: 1.55;
-}
-
-.card-links {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding-top: 4px;
-}
-
-.card-links a {
-  font-size: 13px;
-  font-weight: 400;
+  color: #a3a3a3;
+  cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.card-description-toggle:hover {
   color: #737373;
 }
 
-.card-links a:hover {
+.card-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 0;
+}
+
+.card-field {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.card-field-label {
+  flex-shrink: 0;
+  color: #737373;
+  font-weight: 500;
+}
+
+.card-field-value {
+  min-width: 0;
   color: #404040;
-  opacity: 1;
+  word-break: break-word;
+}
+
+.card-field-value a {
+  color: #404040;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.card-field-value a:hover {
+  color: #000;
+}
+
+.card-field-na {
+  color: #d4d4d4;
+}
+
+.card-link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.card-link-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.card-link-chip-active {
+  color: #000;
+  cursor: pointer;
+}
+
+.card-link-chip-active:hover {
+  opacity: 0.75;
+}
+
+.card-link-chip-muted {
+  color: #d4d4d4;
+  cursor: default;
+  pointer-events: none;
+}
+
+.card-pitch-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  margin-top: 10px;
+  align-items: baseline;
+}
+
+.card-pitch-row .card-field-label {
+  flex-shrink: 0;
+}
+
+.card-pitch-row .card-pitch {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+.card-pitch {
+  font-size: 14px;
+  color: #404040;
+  line-height: 1.55;
+}
+
+.card-pitch-empty {
+  color: #d4d4d4;
+}
+
+.card-pitch-toggle {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  color: #a3a3a3;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.card-pitch-toggle:hover {
+  color: #737373;
 }
 
 .card-submitted {
@@ -357,6 +483,7 @@ button.cohort-filter-text {
   margin-right: 0;
   padding-left: 2px;
   padding-right: 2px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .cohort-tab {

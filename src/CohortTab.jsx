@@ -1,7 +1,7 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import CohortView from "./CohortView.jsx";
 import CohortStatusTable from "./CohortStatusTable.jsx";
-import { submissions } from "./data.js";
+import { fetchWeekSubmissions } from "./githubSubmissions.js";
 
 const WEEKS = [1, 2, 3, 4, 5, 6];
 
@@ -10,13 +10,43 @@ export default function CohortTab() {
   const [sortMode, setSortMode] = useState("newest");
   const [submissionFilter, setSubmissionFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [githubByWeek, setGithubByWeek] = useState({});
+  const [githubLoading, setGithubLoading] = useState(false);
+  const [githubError, setGithubError] = useState(null);
 
   const showStatusTable = activeWeek >= 4 && activeWeek <= 6;
+  const showGithubWeek = activeWeek >= 1 && activeWeek <= 3;
 
-  const weekItems = useMemo(
-    () => submissions.filter((s) => s.week === activeWeek),
-    [activeWeek]
-  );
+  useEffect(() => {
+    if (!showGithubWeek) return;
+    if (githubByWeek[activeWeek] !== undefined) return;
+
+    let cancelled = false;
+    setGithubLoading(true);
+    setGithubError(null);
+
+    fetchWeekSubmissions(activeWeek)
+      .then((items) => {
+        if (cancelled) return;
+        setGithubByWeek((prev) => ({ ...prev, [activeWeek]: items }));
+        setGithubLoading(false);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        setGithubError(err.message ?? "Failed to load submissions");
+        setGithubByWeek((prev) => ({ ...prev, [activeWeek]: [] }));
+        setGithubLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeWeek, showGithubWeek]);
+
+  const weekItems = useMemo(() => {
+    if (!showGithubWeek) return [];
+    return githubByWeek[activeWeek] ?? [];
+  }, [activeWeek, showGithubWeek, githubByWeek]);
 
   const competingCount = useMemo(
     () => weekItems.filter((s) => s.competeForWin).length,
@@ -33,10 +63,8 @@ export default function CohortTab() {
   const searchFilteredItems = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return displayItems;
-    return displayItems.filter(
-      (s) =>
-        s.builderName.toLowerCase().includes(q) ||
-        s.projectName.toLowerCase().includes(q)
+    return displayItems.filter((s) =>
+      s.builderName.toLowerCase().includes(q)
     );
   }, [displayItems, searchQuery]);
 
@@ -84,7 +112,10 @@ export default function CohortTab() {
               }`}
               onClick={onSelectAllSubmissions}
             >
-              {weekItems.length} Total Submissions
+              {githubLoading && githubByWeek[activeWeek] === undefined
+                ? "…"
+                : weekItems.length}{" "}
+              Total Submissions
             </button>
             <span className="cohort-filter-sep" aria-hidden>
               {" "}
@@ -104,22 +135,37 @@ export default function CohortTab() {
           </p>
 
           <label className="cohort-search-label">
-            <span className="visually-hidden">Search by name or project</span>
+            <span className="visually-hidden">Search by GitHub handle</span>
             <input
               type="search"
               className="cohort-search-input"
-              placeholder="Search by name or project"
+              placeholder="Search by GitHub handle"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               autoComplete="off"
               spellCheck={false}
             />
           </label>
-          <CohortView
-            items={searchFilteredItems}
-            sortMode={sortMode}
-            onSortMode={setSortMode}
-          />
+
+          {githubError ? (
+            <div className="cohort-week-empty week-empty" role="alert">
+              <p>Could not load submissions: {githubError}</p>
+            </div>
+          ) : githubLoading && githubByWeek[activeWeek] === undefined ? (
+            <div className="cohort-week-empty week-empty" aria-busy="true">
+              <p>Loading submissions…</p>
+            </div>
+          ) : searchFilteredItems.length === 0 ? (
+            <div className="cohort-week-empty week-empty">
+              <p>No submissions yet for week {activeWeek}.</p>
+            </div>
+          ) : (
+            <CohortView
+              items={searchFilteredItems}
+              sortMode={sortMode}
+              onSortMode={setSortMode}
+            />
+          )}
         </>
       )}
     </div>
