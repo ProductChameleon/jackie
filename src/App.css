@@ -1060,6 +1060,449 @@ button.cohort-filter-text {
   background: var(--color-surface-muted);
 }
 
+/* My Stuff — progress tracker */
+.progress-section {
+  margin-top: 20px;
+}
+
+.progress-section-title {
+  margin: 0 0 16px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.progress-week-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.progress-week-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-card);
+  padding: 18px 20px;
+}
+
+.progress-week-card-future {
+  opacity: 0.55;
+}
+
+.progress-week-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 14px;
+}
+
+.progress-week-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.progress-week-deadline {
+  font-size: 13px;
+  color: var(--color-muted);
+  flex-shrink: 0;
+}
+
+.progress-week-opens {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.progress-week-overall {
+  margin-top: 8px;
+}
+
+.progress-week-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.progress-week-tracks-future .progress-track {
+  opacity: 0.9;
+}
+
+.progress-week-tracks-future .progress-track-name {
+  color: var(--color-muted);
+}
+
+.badge-repo-opens {
+  background: var(--color-surface-muted);
+  color: var(--color-muted);
+}
+
+.progress-track-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.progress-track-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.progress-track-loading {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+.progress-track-hint {
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-muted);
+}
+
+.progress-track-warning {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-warning-text);
+  background: var(--color-warning-bg);
+  border-radius: var(--radius-btn);
+}
+
+.badge-overall-done {
+  background: var(--color-accent-bg);
+  color: var(--color-accent);
+}
+
+.badge-overall-on-track {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.badge-overall-at-risk {
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+}
+
+.badge-overall-not-started {
+  background: var(--color-surface-muted);
+  color: var(--color-muted);
+}
+
+.progress-realwork-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-realwork-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-btn);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.progress-realwork-input:focus {
+  outline: none;
+  border-color: var(--color-muted);
+}
+
+.progress-realwork-save {
+  padding: 8px 14px;
+  font-size: 13px;
+}
+
+.progress-realwork-cancel {
+  padding: 8px 14px;
+  font-size: 13px;
+}
+
+.progress-realwork-saved {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-realwork-link {
+  font-size: 14px;
+  color: var(--color-text);
+  word-break: break-all;
+}
+
+.progress-realwork-edit {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--color-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.progress-realwork-edit:hover {
+  color: var(--color-text);
+}
+
+.progress-week-description {
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-text);
+}
+
+.progress-week-description-toggle {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.progress-week-description-toggle:hover {
+  color: var(--color-text);
+}
+
+.progress-what-youll-need {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.progress-what-youll-need-title {
+  margin: 0 0 12px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.progress-what-youll-need-field {
+  margin-bottom: 14px;
+}
+
+.progress-what-youll-need-field:last-child {
+  margin-bottom: 0;
+}
+
+.progress-what-youll-need-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.progress-what-youll-need-hint {
+  display: block;
+  margin: 2px 0 8px;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.progress-what-youll-need-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-what-youll-need-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-btn);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.progress-what-youll-need-input:focus {
+  outline: none;
+  border-color: var(--color-muted);
+}
+
+.progress-what-youll-need-save,
+.progress-what-youll-need-cancel {
+  padding: 8px 14px;
+  font-size: 13px;
+}
+
+.progress-what-youll-need-saved {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.progress-what-youll-need-saved a {
+  word-break: break-all;
+}
+
+.progress-what-youll-need-edit {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--color-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.progress-what-youll-need-edit:hover {
+  color: var(--color-text);
+}
+
+.week-card-tasks {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+.week-card-task-list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+}
+
+.week-card-task-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 14px;
+}
+
+.week-card-task-row:last-child {
+  border-bottom: none;
+}
+
+.week-card-task-indicator {
+  font-size: 10px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.week-card-task-soon {
+  color: var(--color-warning-text);
+}
+
+.week-card-task-overdue {
+  color: #dc2626;
+}
+
+.week-card-task-text {
+  flex: 1;
+  min-width: 120px;
+  color: var(--color-text);
+}
+
+.week-card-task-due {
+  font-size: 13px;
+  color: var(--color-muted);
+  flex-shrink: 0;
+}
+
+.week-card-task-delete {
+  flex-shrink: 0;
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--color-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.week-card-task-delete:hover {
+  color: var(--color-text);
+}
+
+.week-card-task-add-link {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.week-card-task-add-link:hover {
+  color: var(--color-muted);
+}
+
+.week-card-task-add-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.week-card-task-text-input {
+  flex: 1;
+  min-width: 160px;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-btn);
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.week-card-task-date-input {
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-btn);
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.week-card-task-text-input:focus,
+.week-card-task-date-input:focus {
+  outline: none;
+  border-color: var(--color-muted);
+}
+
+.week-card-task-add-btn,
+.week-card-task-cancel-btn {
+  padding: 8px 14px;
+  font-size: 13px;
+}
+
 .btn-primary {
   border: 1px solid var(--color-text);
   border-radius: var(--radius-btn);
