@@ -85,12 +85,12 @@ export default function CohortTab() {
 
   return (
     <div className="cohort-tab">
-      <nav className="tabs week-tabs" aria-label="Cohort week">
+      <nav className="week-tabs" aria-label="Cohort week">
         {WEEKS.map((w) => (
           <button
             key={w}
             type="button"
-            className={`tab ${activeWeek === w ? "tab-active" : ""}`}
+            className={`week-tab ${activeWeek === w ? "week-tab-active" : ""}`}
             onClick={() => onWeekChange(w)}
           >
             Week {w}

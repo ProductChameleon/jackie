@@ -51,32 +51,15 @@ function buildWeek4Rows() {
 
 function statusCell(status) {
   if (status === "not_started") {
-    return (
-      <span className="cohort-status-pill cohort-status-not-started">Not Started</span>
-    );
+    return <span className="badge badge-no-submission">No Submission</span>;
   }
   if (status === "in_progress") {
-    return (
-      <span className="cohort-status-pill cohort-status-in-progress">
-        <span className="cohort-status-dot cohort-status-dot-amber" aria-hidden />
-        In Progress
-      </span>
-    );
+    return <span className="badge badge-pr-open">PR Open</span>;
   }
   if (status === "complete_ontime") {
-    return (
-      <span className="cohort-status-pill cohort-status-complete-ok">
-        <span className="cohort-status-dot cohort-status-dot-green" aria-hidden />
-        Complete
-      </span>
-    );
+    return <span className="badge badge-merged">Merged</span>;
   }
-  return (
-    <span className="cohort-status-pill cohort-status-complete-late">
-      <span className="cohort-status-dot cohort-status-dot-red" aria-hidden />
-      Complete · late
-    </span>
-  );
+  return <span className="badge badge-pr-open">PR Open</span>;
 }
 
 function submittedCell(status) {

@@ -15,6 +15,8 @@ const WEEK_SUBMISSION_JSON_DIRS = {
   3: "content/summer-cohort/c1/w3-mkt/submissions",
 };
 
+import { githubFetch, githubHeaders } from "./githubApi.js";
+
 const EXCLUDED_AUTHOR = "rogerSuperBuilderAlpha";
 const TEST_TITLE_RE = /\b(placeholder|test|fixture)\b/i;
 const URL_IN_TEXT = /https?:\/\/[^\s\n<>)"]+/gi;
@@ -26,15 +28,6 @@ const displayNameCache = new Map();
  * @type {Map<string, { pitch: string | null, repoUrl: string | null, liveUrl: string | null, loomUrl: string | null } | null>}
  */
 const submissionJsonCache = new Map();
-
-function githubHeaders() {
-  const headers = {
-    Accept: "application/vnd.github+json",
-  };
-  const token = import.meta.env.VITE_GITHUB_TOKEN;
-  if (token) headers.Authorization = `Bearer ${token}`;
-  return headers;
-}
 
 /** @param {Record<string, unknown>} pr */
 export function isExcludedPr(pr) {
@@ -292,11 +285,8 @@ async function fetchSubmissionJson(week, login) {
   url.searchParams.set("ref", branch);
 
   try {
-    const res = await fetch(url, {
-      headers: {
-        ...githubHeaders(),
-        Accept: "application/vnd.github.raw+json",
-      },
+    const res = await githubFetch(url, {
+      headers: githubHeaders("application/vnd.github.raw+json"),
     });
 
     if (!res.ok) {
@@ -330,9 +320,9 @@ async function fetchGitHubDisplayName(login) {
   if (displayNameCache.has(login)) return displayNameCache.get(login) ?? null;
 
   try {
-    const res = await fetch(`https://api.github.com/users/${encodeURIComponent(login)}`, {
-      headers: githubHeaders(),
-    });
+    const res = await githubFetch(
+      `https://api.github.com/users/${encodeURIComponent(login)}`
+    );
     if (!res.ok) {
       displayNameCache.set(login, null);
       return null;
@@ -408,7 +398,7 @@ export async function fetchWeekSubmissions(week) {
     url.searchParams.set("sort", "updated");
     url.searchParams.set("direction", "desc");
 
-    const res = await fetch(url, { headers: githubHeaders() });
+    const res = await githubFetch(url);
     if (!res.ok) {
       const detail = await res.text();
       throw new Error(

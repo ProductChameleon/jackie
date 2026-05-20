@@ -14,7 +14,7 @@ body {
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 15px;
   line-height: 1.5;
-  color: #1a1a1a;
+  color: #111827;
   background: #fff;
 }
 
@@ -23,13 +23,13 @@ body {
 }
 
 a {
-  color: #000;
+  color: #111827;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
 a:hover {
-  opacity: 0.65;
+  color: #6b7280;
 }
 
 button {
