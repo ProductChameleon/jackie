@@ -237,6 +237,9 @@
 .week-tab {
   appearance: none;
   border: none;
+  flex-shrink: 0;
+  white-space: nowrap;
+  position: relative;
   padding: 0.35rem 0.75rem;
   font-size: 0.75rem;
   font-weight: 500;
@@ -251,12 +254,16 @@
   color: var(--color-text);
 }
 
-.week-tab-active {
+.week-tab.week-tab-selected,
+.week-tab.week-tab-selected:hover,
+.week-tab.week-tab-selected:focus-visible {
   background: var(--color-text);
   color: #fff;
+  -webkit-text-fill-color: currentColor;
 }
 
-.week-tab-active::after {
+.week-tab.week-tab-selected::after {
+  content: none;
   display: none;
 }
 
@@ -430,9 +437,12 @@ button.cohort-filter-text {
   top: 16px;
   right: 16px;
   z-index: 1;
+  box-sizing: content-box;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 22px;
+  height: 22px;
   padding: 4px;
   border: none;
   background: transparent;
@@ -446,6 +456,11 @@ button.cohort-filter-text {
 
 .card-award-svg {
   display: block;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  min-height: 22px;
 }
 
 .card-award-svg-off {
@@ -1434,19 +1449,18 @@ button.cohort-filter-text {
 
 .week-card-task-delete {
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   background: none;
-  padding: 0;
-  font-family: inherit;
-  font-size: 12px;
+  padding: 4px;
   color: var(--color-muted);
   cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 2px;
 }
 
 .week-card-task-delete:hover {
-  color: var(--color-text);
+  color: #dc2626;
 }
 
 .week-card-task-add-link {

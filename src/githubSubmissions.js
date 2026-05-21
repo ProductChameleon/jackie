@@ -6,6 +6,9 @@ export const WEEK_SUBMISSION_BRANCHES = {
   1: "c1w1pm-submission",
   2: "c1w2comms-submission",
   3: "c1w3mkt-submission",
+  4: "c1w4edu-submission",
+  5: "c1w5startup-submission",
+  6: "c1w6oss-submission",
 };
 
 /** @type {Record<number, string>} submission JSON directory on each week branch */
@@ -13,9 +16,15 @@ const WEEK_SUBMISSION_JSON_DIRS = {
   1: "content/summer-cohort/c1/w1-pm/submissions",
   2: "content/summer-cohort/c1/w2-comms/submissions",
   3: "content/summer-cohort/c1/w3-mkt/submissions",
+  4: "content/summer-cohort/c1/w4-edu/submissions",
+  5: "content/summer-cohort/c1/w5-startup/submissions",
+  6: "content/summer-cohort/c1/w6-oss/submissions",
 };
 
 import { githubFetch, githubHeaders } from "./githubApi.js";
+import { getMockWeekSubmissions, MOCK_MODE } from "./cohortMockSubmissions.js";
+
+export { MOCK_MODE } from "./cohortMockSubmissions.js";
 
 const EXCLUDED_AUTHOR = "rogerSuperBuilderAlpha";
 const TEST_TITLE_RE = /\b(placeholder|test|fixture)\b/i;
@@ -255,11 +264,15 @@ function parseSubmissionJsonFields(data) {
   const loomUrl = stringOrNull(data.loomUrl);
   const pitch = stringOrNull(data.pitch);
 
+  const competeForWin =
+    typeof data.competeForWin === "boolean" ? data.competeForWin : null;
+
   return {
     pitch,
     repoUrl: repoUrl ? cleanUrl(repoUrl) : null,
     liveUrl: liveUrl ? cleanUrl(liveUrl) : null,
     loomUrl: loomUrl ? cleanUrl(loomUrl) : null,
+    competeForWin,
   };
 }
 
@@ -356,9 +369,8 @@ async function mapPullRequestToSubmission(pr, week) {
   const body = String(pr.body ?? "");
   const login = pr.user?.login ?? "unknown";
   const json = await fetchSubmissionJson(week, login);
-  const { repoUrl, liveUrl, loomUrl, pitch } = json
-    ? json
-    : fieldsFromPrBody(body);
+  const bodyFields = fieldsFromPrBody(body);
+  const mergedAt = pr.merged_at ? String(pr.merged_at) : null;
 
   return {
     id: `w${week}-pr-${pr.number}`,
@@ -367,20 +379,26 @@ async function mapPullRequestToSubmission(pr, week) {
     photo:
       pr.user?.avatar_url ??
       `https://avatars.githubusercontent.com/u/0?v=4`,
-    repoUrl,
-    liveUrl,
-    loomUrl,
-    pitch,
+    repoUrl: json?.repoUrl ?? bodyFields.repoUrl,
+    liveUrl: json?.liveUrl ?? bodyFields.liveUrl,
+    loomUrl: json?.loomUrl ?? bodyFields.loomUrl,
+    pitch: json?.pitch ?? bodyFields.pitch,
     week,
-    submissionDate: String(pr.merged_at).slice(0, 10),
-    competeForWin: isCompetingForWin(body),
+    submissionTimestamp: mergedAt,
+    submissionDate: mergedAt ?? "",
+    competeForWin:
+      json?.competeForWin ?? isCompetingForWin(body),
   };
 }
 
 /**
- * @param {number} week 1–3
+ * @param {number} week 1–6
  */
 export async function fetchWeekSubmissions(week) {
+  if (MOCK_MODE && week >= 4 && week <= 6) {
+    return getMockWeekSubmissions(week);
+  }
+
   const base = WEEK_SUBMISSION_BRANCHES[week];
   if (!base) return [];
 

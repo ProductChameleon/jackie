@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { Trash2 } from "lucide-react";
 import {
   addWeekTask,
   deleteWeekTask,
@@ -85,9 +86,9 @@ export default function WeekCardTasks({ weekNumber, tasks, onChange }) {
                 type="button"
                 className="week-card-task-delete"
                 onClick={() => handleDelete(t.id)}
-                aria-label="Delete task"
+                aria-label={`Delete task: ${t.text}`}
               >
-                Remove
+                <Trash2 size={16} strokeWidth={2} aria-hidden />
               </button>
             </li>
           ))}

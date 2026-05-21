@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import CohortView from "./CohortView.jsx";
-import CohortStatusTable from "./CohortStatusTable.jsx";
 import { fetchWeekSubmissions } from "./githubSubmissions.js";
 
 const WEEKS = [1, 2, 3, 4, 5, 6];
@@ -14,11 +13,7 @@ export default function CohortTab() {
   const [githubLoading, setGithubLoading] = useState(false);
   const [githubError, setGithubError] = useState(null);
 
-  const showStatusTable = activeWeek >= 4 && activeWeek <= 6;
-  const showGithubWeek = activeWeek >= 1 && activeWeek <= 3;
-
   useEffect(() => {
-    if (!showGithubWeek) return;
     if (githubByWeek[activeWeek] !== undefined) return;
 
     let cancelled = false;
@@ -41,12 +36,12 @@ export default function CohortTab() {
     return () => {
       cancelled = true;
     };
-  }, [activeWeek, showGithubWeek]);
+  }, [activeWeek]);
 
-  const weekItems = useMemo(() => {
-    if (!showGithubWeek) return [];
-    return githubByWeek[activeWeek] ?? [];
-  }, [activeWeek, showGithubWeek, githubByWeek]);
+  const weekItems = useMemo(
+    () => githubByWeek[activeWeek] ?? [],
+    [activeWeek, githubByWeek]
+  );
 
   const competingCount = useMemo(
     () => weekItems.filter((s) => s.competeForWin).length,
@@ -90,7 +85,7 @@ export default function CohortTab() {
           <button
             key={w}
             type="button"
-            className={`week-tab ${activeWeek === w ? "week-tab-active" : ""}`}
+            className={`week-tab ${activeWeek === w ? "week-tab-selected" : ""}`}
             onClick={() => onWeekChange(w)}
           >
             Week {w}
@@ -98,75 +93,70 @@ export default function CohortTab() {
         ))}
       </nav>
 
-      {showStatusTable ? (
-        <CohortStatusTable week={activeWeek} />
+      <p className="cohort-filters" aria-label="Submission filters">
+        <button
+          type="button"
+          className={`cohort-filter-text ${
+            submissionFilter === "all"
+              ? "cohort-filter-text-active"
+              : "cohort-filter-text-inactive"
+          }`}
+          onClick={onSelectAllSubmissions}
+        >
+          {githubLoading && githubByWeek[activeWeek] === undefined
+            ? "…"
+            : weekItems.length}{" "}
+          Total Submissions
+        </button>
+        <span className="cohort-filter-sep" aria-hidden>
+          {" "}
+          ·{" "}
+        </span>
+        <button
+          type="button"
+          className={`cohort-filter-text ${
+            submissionFilter === "competing"
+              ? "cohort-filter-text-active"
+              : "cohort-filter-text-inactive"
+          }`}
+          onClick={onSelectCompetingOnly}
+        >
+          {competingCount} Competing for the Win
+        </button>
+      </p>
+
+      <label className="cohort-search-label">
+        <span className="visually-hidden">Search by GitHub handle</span>
+        <input
+          type="search"
+          className="cohort-search-input"
+          placeholder="Search by GitHub handle"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          autoComplete="off"
+          spellCheck={false}
+        />
+      </label>
+
+      {githubError ? (
+        <div className="cohort-week-empty week-empty" role="alert">
+          <p>Could not load submissions: {githubError}</p>
+        </div>
+      ) : githubLoading && githubByWeek[activeWeek] === undefined ? (
+        <div className="cohort-week-empty week-empty" aria-busy="true">
+          <p>Loading submissions…</p>
+        </div>
+      ) : searchFilteredItems.length === 0 ? (
+        <div className="cohort-week-empty week-empty">
+          <p>No submissions yet for week {activeWeek}.</p>
+        </div>
       ) : (
-        <>
-          <p className="cohort-filters" aria-label="Submission filters">
-            <button
-              type="button"
-              className={`cohort-filter-text ${
-                submissionFilter === "all"
-                  ? "cohort-filter-text-active"
-                  : "cohort-filter-text-inactive"
-              }`}
-              onClick={onSelectAllSubmissions}
-            >
-              {githubLoading && githubByWeek[activeWeek] === undefined
-                ? "…"
-                : weekItems.length}{" "}
-              Total Submissions
-            </button>
-            <span className="cohort-filter-sep" aria-hidden>
-              {" "}
-              ·{" "}
-            </span>
-            <button
-              type="button"
-              className={`cohort-filter-text ${
-                submissionFilter === "competing"
-                  ? "cohort-filter-text-active"
-                  : "cohort-filter-text-inactive"
-              }`}
-              onClick={onSelectCompetingOnly}
-            >
-              {competingCount} Competing for the Win
-            </button>
-          </p>
-
-          <label className="cohort-search-label">
-            <span className="visually-hidden">Search by GitHub handle</span>
-            <input
-              type="search"
-              className="cohort-search-input"
-              placeholder="Search by GitHub handle"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              autoComplete="off"
-              spellCheck={false}
-            />
-          </label>
-
-          {githubError ? (
-            <div className="cohort-week-empty week-empty" role="alert">
-              <p>Could not load submissions: {githubError}</p>
-            </div>
-          ) : githubLoading && githubByWeek[activeWeek] === undefined ? (
-            <div className="cohort-week-empty week-empty" aria-busy="true">
-              <p>Loading submissions…</p>
-            </div>
-          ) : searchFilteredItems.length === 0 ? (
-            <div className="cohort-week-empty week-empty">
-              <p>No submissions yet for week {activeWeek}.</p>
-            </div>
-          ) : (
-            <CohortView
-              items={searchFilteredItems}
-              sortMode={sortMode}
-              onSortMode={setSortMode}
-            />
-          )}
-        </>
+        <CohortView
+          items={searchFilteredItems}
+          week={activeWeek}
+          sortMode={sortMode}
+          onSortMode={setSortMode}
+        />
       )}
     </div>
   );

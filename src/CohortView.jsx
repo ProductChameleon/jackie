@@ -1,20 +1,36 @@
 import { useCallback, useState } from "react";
 
-const submittedDateFormatter = new Intl.DateTimeFormat("en-US", {
-  month: "long",
-  day: "numeric",
-  year: "numeric",
-});
+/** @param {string} iso GitHub `merged_at` timestamp */
+function formatSubmittedTimestamp(iso) {
+  if (!iso) return "Submitted —";
 
-/** @param {string} isoDate `YYYY-MM-DD` from cohort data */
-function formatSubmittedCaption(isoDate) {
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(isoDate));
-  if (!m) return `Submitted ${isoDate}`;
-  const y = Number(m[1]);
-  const mo = Number(m[2]) - 1;
-  const d = Number(m[3]);
-  const date = new Date(y, mo, d);
-  return `Submitted ${submittedDateFormatter.format(date)}`;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return `Submitted ${iso}`;
+
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(d);
+
+  const get = (type) => parts.find((p) => p.type === type)?.value ?? "";
+  return `Submitted ${get("month")}/${get("day")}/${get("year")} ${get("hour")}:${get("minute")} EST`;
+}
+
+/**
+ * @param {number} week
+ * @param {boolean} competeForWin
+ * @returns {"trophy" | "demo" | null}
+ */
+function cardAwardType(week, competeForWin) {
+  if (!competeForWin) return null;
+  if (week >= 1 && week <= 3) return "trophy";
+  if (week === 5) return "demo";
+  return null;
 }
 
 /** First token and last token for “First Last …” display names. */
@@ -145,7 +161,23 @@ function CardPitch({ text }) {
   );
 }
 
-function TrophyIcon({ flagged }) {
+/** Stroke paths for unflagged award badges (trophy + demo share identical attrs). */
+const AWARD_STROKE_PATH = {
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 2,
+  strokeLinecap: "round",
+  strokeLinejoin: "round",
+};
+
+/**
+ * Cohort card award badge — weeks 1–3 trophy, week 5 demo monitor.
+ * Same wrapper, classes, and stroke/fill treatment; only the path shapes differ.
+ *
+ * @param {"trophy" | "demo"} variant
+ * @param {boolean} flagged
+ */
+function CardAwardIcon({ variant, flagged }) {
   return (
     <svg
       className={flagged ? "card-award-svg card-award-svg-on" : "card-award-svg card-award-svg-off"}
@@ -154,36 +186,43 @@ function TrophyIcon({ flagged }) {
       viewBox="0 0 24 24"
       aria-hidden
     >
-      {flagged ? (
+      {variant === "trophy" ? (
+        flagged ? (
+          <path
+            fill="currentColor"
+            d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.63 1.98 2.91 3.61 3.46V19H7v2h10v-2h-4v-2.1c1.63-.55 2.98-1.83 3.61-3.46C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"
+          />
+        ) : (
+          <>
+            <path
+              d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"
+              {...AWARD_STROKE_PATH}
+            />
+            <path
+              d="M7 4H5a1.5 1.5 0 0 0 0 3h2M17 4h2a1.5 1.5 0 0 1 0 3h-2"
+              {...AWARD_STROKE_PATH}
+            />
+          </>
+        )
+      ) : flagged ? (
         <path
           fill="currentColor"
-          d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.63 1.98 2.91 3.61 3.46V19H7v2h10v-2h-4v-2.1c1.63-.55 2.98-1.83 3.61-3.46C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"
+          d="M4 3h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2.84l-1.16 3.16H9L7.84 17H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm8 16h-2v-1h2v1z"
         />
       ) : (
         <>
           <path
-            d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            d="M6 4h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"
+            {...AWARD_STROKE_PATH}
           />
-          <path
-            d="M7 4H5a1.5 1.5 0 0 0 0 3h2M17 4h2a1.5 1.5 0 0 1 0 3h-2"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+          <path d="M8 21h8M12 17v4" {...AWARD_STROKE_PATH} />
         </>
       )}
     </svg>
   );
 }
 
-export default function CohortView({ items, sortMode, onSortMode }) {
+export default function CohortView({ items, week, sortMode, onSortMode }) {
   const [awardFlags, setAwardFlags] = useState({});
 
   const orderIndex = Object.fromEntries(items.map((s, i) => [s.id, i]));
@@ -209,8 +248,11 @@ export default function CohortView({ items, sortMode, onSortMode }) {
     return tieBreak();
   });
 
-  const toggleAward = useCallback((id) => {
-    setAwardFlags((prev) => ({ ...prev, [id]: !prev[id] }));
+  const toggleAward = useCallback((id, competeForWin) => {
+    setAwardFlags((prev) => {
+      const current = prev[id] ?? competeForWin;
+      return { ...prev, [id]: !current };
+    });
   }, []);
 
   return (
@@ -235,20 +277,27 @@ export default function CohortView({ items, sortMode, onSortMode }) {
 
       <div className="card-grid">
         {sorted.map((s) => {
-          const flagged = Boolean(awardFlags[s.id]);
+          const flagged = awardFlags[s.id] ?? s.competeForWin;
+          const awardType = cardAwardType(week, s.competeForWin);
           return (
             <article key={s.id} className="card">
-              {s.competeForWin ? (
+              {awardType ? (
                 <button
                   type="button"
                   className="card-award-btn"
-                  onClick={() => toggleAward(s.id)}
+                  onClick={() => toggleAward(s.id, s.competeForWin)}
                   aria-pressed={flagged}
                   aria-label={
-                    flagged ? "Clear award highlight" : "Flag with award"
+                    awardType === "demo"
+                      ? flagged
+                        ? "Clear demo highlight"
+                        : "Flag for demo"
+                      : flagged
+                        ? "Clear award highlight"
+                        : "Flag with award"
                   }
                 >
-                  <TrophyIcon flagged={flagged} />
+                  <CardAwardIcon variant={awardType} flagged={flagged} />
                 </button>
               ) : null}
               <div className="card-top">
@@ -274,7 +323,9 @@ export default function CohortView({ items, sortMode, onSortMode }) {
                 <LinkChip label="Loom" url={s.loomUrl} />
               </div>
               <CardPitch text={s.pitch} />
-              <p className="card-submitted">{formatSubmittedCaption(s.submissionDate)}</p>
+              <p className="card-submitted">
+                {formatSubmittedTimestamp(s.submissionTimestamp)}
+              </p>
             </article>
           );
         })}
