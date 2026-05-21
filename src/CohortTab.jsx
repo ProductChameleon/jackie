@@ -4,6 +4,19 @@ import { fetchWeekSubmissions } from "./githubSubmissions.js";
 
 const WEEKS = [1, 2, 3, 4, 5, 6];
 
+/** @param {number} week @returns {"competing" | "demoing" | null} */
+function weekFlagFilter(week) {
+  if (week >= 1 && week <= 3) return "competing";
+  if (week === 5) return "demoing";
+  return null;
+}
+
+/** @param {number} week @param {"competing" | "demoing"} filter */
+function weekFlagFilterLabel(week, filter) {
+  if (filter === "demoing") return "Demoing";
+  return "Competing for the Win";
+}
+
 export default function CohortTab() {
   const [activeWeek, setActiveWeek] = useState(1);
   const [sortMode, setSortMode] = useState("newest");
@@ -43,17 +56,19 @@ export default function CohortTab() {
     [activeWeek, githubByWeek]
   );
 
-  const competingCount = useMemo(
+  const flagFilter = weekFlagFilter(activeWeek);
+
+  const flaggedCount = useMemo(
     () => weekItems.filter((s) => s.competeForWin).length,
     [weekItems]
   );
 
   const displayItems = useMemo(() => {
-    if (submissionFilter === "competing") {
+    if (flagFilter && submissionFilter === flagFilter) {
       return weekItems.filter((s) => s.competeForWin);
     }
     return weekItems;
-  }, [weekItems, submissionFilter]);
+  }, [weekItems, submissionFilter, flagFilter]);
 
   const searchFilteredItems = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -68,9 +83,10 @@ export default function CohortTab() {
     setSortMode("newest");
   }, []);
 
-  const onSelectCompetingOnly = useCallback(() => {
-    setSubmissionFilter("competing");
-  }, []);
+  const onSelectFlaggedOnly = useCallback(() => {
+    const filter = weekFlagFilter(activeWeek);
+    if (filter) setSubmissionFilter(filter);
+  }, [activeWeek]);
 
   const onWeekChange = useCallback((w) => {
     setActiveWeek(w);
@@ -108,21 +124,25 @@ export default function CohortTab() {
             : weekItems.length}{" "}
           Total Submissions
         </button>
-        <span className="cohort-filter-sep" aria-hidden>
-          {" "}
-          ·{" "}
-        </span>
-        <button
-          type="button"
-          className={`cohort-filter-text ${
-            submissionFilter === "competing"
-              ? "cohort-filter-text-active"
-              : "cohort-filter-text-inactive"
-          }`}
-          onClick={onSelectCompetingOnly}
-        >
-          {competingCount} Competing for the Win
-        </button>
+        {flagFilter ? (
+          <>
+            <span className="cohort-filter-sep" aria-hidden>
+              {" "}
+              ·{" "}
+            </span>
+            <button
+              type="button"
+              className={`cohort-filter-text ${
+                submissionFilter === flagFilter
+                  ? "cohort-filter-text-active"
+                  : "cohort-filter-text-inactive"
+              }`}
+              onClick={onSelectFlaggedOnly}
+            >
+              {flaggedCount} {weekFlagFilterLabel(activeWeek, flagFilter)}
+            </button>
+          </>
+        ) : null}
       </p>
 
       <label className="cohort-search-label">

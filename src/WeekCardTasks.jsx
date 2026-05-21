@@ -9,11 +9,12 @@ import { parseLocalDate, startOfDay } from "./weeksProgressConfig.js";
 
 /** @param {string} iso */
 function formatDueLabel(iso) {
-  return parseLocalDate(iso).toLocaleDateString("en-US", {
+  const date = parseLocalDate(iso).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
   });
+  return `Due ${date}`;
 }
 
 /** @param {string} dueIso */
@@ -105,13 +106,24 @@ export default function WeekCardTasks({ weekNumber, tasks, onChange }) {
             onChange={(e) => setText(e.target.value)}
             autoFocus
           />
-          <input
-            type="date"
-            className="week-card-task-date-input"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            required
-          />
+          <label className="week-card-task-date-field">
+            <span className="week-card-task-date-label">Due Date</span>
+            <span className="week-card-task-date-control">
+              {dueDate ? (
+                <span className="week-card-task-date-prefix" aria-hidden>
+                  Due Date{" "}
+                </span>
+              ) : null}
+              <input
+                type="date"
+                className={`week-card-task-date-input${dueDate ? " week-card-task-date-input--has-value" : ""}`}
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                required
+                aria-label="Due Date"
+              />
+            </span>
+          </label>
           <button type="submit" className="btn-primary week-card-task-add-btn">
             Add
           </button>
